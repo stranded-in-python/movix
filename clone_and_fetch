@@ -1,0 +1,60 @@
+#!/bin/bash
+
+if [ ! -d "./projects" ]; then
+  echo "Not found projects dir, creating..."
+  mkdir projects
+fi
+
+
+cd ./projects
+
+if [ ! -d "./movix-admin" ]; then
+  echo "Not found movix-admin repo, cloning..."
+  git clone git@github.com:stranded-in-python/movix-admin.git
+else
+  echo "Updating movix-admin..."
+  cd movix-admin
+  if [ ! -f ".git/hooks/pre-push" ]; then
+    cp -f ../../.githooks/pre-push .git/hooks/
+  fi
+  git fetch
+  git stash
+  git checkout main
+  git pull origin main
+  echo "Stashed changes, pulled and checked out movix-admin/main"
+  cd ..
+fi
+
+if [ ! -d "./movix-etl" ]; then
+  git clone git@github.com:stranded-in-python/movix-etl.git
+else
+  echo "Updating movix-etl..."
+  cd movix-etl
+  if [ ! -f ".git/hooks/pre-push" ]; then
+    cp -f ../../.githooks/pre-push .git/hooks/
+  fi
+  git fetch
+  git stash
+  git checkout main
+  git pull origin main
+  echo "Stashed changes, pulled and checked out movix-admin/main"
+  cd ..
+fi
+
+if [ ! -d "./movix-api" ]; then
+  git clone git@github.com:stranded-in-python/movix-api.git
+else
+  echo "Updating movix-api..."
+  cd movix-api
+  if [ ! -f ".git/hooks/pre-push" ]; then
+    cp -f ../../.githooks/pre-push .git/hooks/
+  fi
+  git fetch
+  git stash
+  git checkout main
+  git pull origin main
+  echo "Stashed changes, pulled and checked out movix-admin/main"
+  cd ..
+fi
+
+cd ..

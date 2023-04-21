@@ -1,0 +1,3 @@
+-r projects/movix-admin/requirements/local.txt
+-r projects/movix-etl/requirements/local.txt
+-r projects/movix-api/requirements/local.txt
