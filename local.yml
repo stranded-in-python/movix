@@ -19,8 +19,8 @@ services:
 
   admin:
     build:
-      context: .
-      dockerfile: ./projects/admin/compose/local/django/Dockerfile
+      context: ./projects/movix-admin/
+      dockerfile: ./compose/local/django/Dockerfile
     image: movix_admin
     depends_on:
       - postgres
@@ -56,8 +56,8 @@ services:
 
   s2p:
     build:
-      context: .
-      dockerfile: ./projects/admin/compose/production/sqlite_to_postgres/Dockerfile
+      context: ./projects/movix-admin/
+      dockerfile: ./compose/production/sqlite_to_postgres/Dockerfile
     image: yamp_s2p
     stdin_open: true
     depends_on:
@@ -86,13 +86,13 @@ services:
 
   api:
     build:
-      context: .
-      dockerfile: ./projects/movix-api/compose/local/api/Dockerfile
+      context: ./projects/movix-api/
+      dockerfile: ./compose/local/api/Dockerfile
     image: movix_api
     stdin_open: true
     depends_on:
       - elastic
-    commnand: "/start"
+    command: "/start"
     volumes:
       - ./projects/movix-api/src:/app:z
     env_file:
