@@ -1,0 +1,9 @@
+DJANGO_SECRET_KEY='bF63vR%TPMoY7eDT!2Ub6%ynow4Bn*yzsrGeydJT$hVQ*F2q3BD&ASYr2*Dbat!aSFn59*5!cjj*z&ZomGxsuhcCx8qC3Ujj*qNgQ%6cwWuoahazN4@FPDhDNt3Sd2ps'
+DJANGO_ENV='development'
+USE_DOCKER=yes
+DJANGO_ALLOWED_HOSTS='127.0.0.1,localhost,admin'
+ELASTIC_ENDPOINT='http://elastic:9200'
+ELASTIC_INDEX='movies'
+REDIS_HOST='redis'
+REDIS_PORT=6379
+DJANGO_ENDPOINT="http://admin:8000"

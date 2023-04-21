@@ -1,0 +1,50 @@
+#!/bin/bash
+
+if [ ! -d ./projects ]; then
+  echo "Not found projects dir, creating..."
+  mkdir projects
+fi
+
+cd ./projects
+
+if [ ! -d ./projects/movix-admin ]; then
+  echo "Not found movix-admin repo, cloning..."
+  git clone git@github.com:stranded-in-python/movix-admin.git
+else
+  echo "Updating movix-admin..."
+  cd movix-admin
+  git fetch
+  git stash
+  git checkout main
+  git pull origin main
+  echo "Stashed changes, pulled and checked out movix-admin/main"
+  cd ..
+fi
+
+if [ ! -d ./projects/movix-etl ]; then
+  git clone git@github.com:stranded-in-python/movix-etl.git
+else
+  echo "Updating movix-etl..."
+  cd movix-etl
+  git fetch
+  git stash
+  git checkout main
+  git pull origin main
+  echo "Stashed changes, pulled and checked out movix-admin/main"
+  cd ..
+fi
+
+if [ ! -d ./projects/movix-api ]; then
+  git clone git@github.com:stranded-in-python/movix-api.git
+else
+  echo "Updating movix-api..."
+  cd movix-api
+  git fetch
+  git stash
+  git checkout main
+  git pull origin main
+  echo "Stashed changes, pulled and checked out movix-admin/main"
+  cd ..
+fi
+
+cd ..

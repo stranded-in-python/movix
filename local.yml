@@ -1,0 +1,101 @@
+version: "3.8"
+
+name: "movix_local"
+
+volumes:
+  postgres_data_local: {}
+  elastic_data_local: {}
+  redis_data_local: {}
+
+services:
+  postgres:
+    image: postgres:14
+    env_file:
+      - ./.envs/.local/.postgres
+    volumes:
+      - postgres_data_local:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
+  admin:
+    build:
+      context: .
+      dockerfile: ./projects/admin/compose/local/django/Dockerfile
+    image: movix_admin
+    depends_on:
+      - postgres
+    volumes:
+      - ./projects/movix-admin/admin:/app:z
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    stdin_open: true
+    command: "/start"
+    ports:
+      - "8000:8000"
+
+  redis:
+    image: redis:7.2-rc-bullseye
+    volumes:
+      - redis_data_local:/data
+    ports:
+      - "6379:6379"
+
+  elastic:
+    image: elasticsearch:8.7.0
+    volumes:
+      - elastic_data_local:/usr/share/elasticsearch/data
+    env_file:
+      - ./.envs/.local/.elastic
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+
+  s2p:
+    build:
+      context: .
+      dockerfile: ./projects/admin/compose/production/sqlite_to_postgres/Dockerfile
+    image: yamp_s2p
+    stdin_open: true
+    depends_on:
+      - admin
+      - postgres
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.postgres
+      - ./.envs/.local/.django
+
+  etl:
+    image: ghcr.io/stranded-in-python/movix-etl:dev
+    stdin_open: true
+    restart: always
+    depends_on:
+      - postgres
+      - elastic
+      - admin
+      - s2p
+    env_file:
+      - ./.envs/.local/.postgres
+      - ./.envs/.local/.django
+    command: "/start"
+    volumes:
+      - ./projects/movix-etl/src/:/app:z
+
+  api:
+    build:
+      context: .
+      dockerfile: ./projects/movix-api/compose/local/api/Dockerfile
+    image: movix_api
+    stdin_open: true
+    depends_on:
+      - elastic
+    commnand: "/start"
+    volumes:
+      - ./projects/movix-api/src:/app:z
+    env_file:
+      - ./.envs/.local/.api
+    ports:
+      - "8001:5001"
