@@ -69,7 +69,9 @@ services:
       - ./.envs/.local/.django
 
   etl:
-    image: ghcr.io/stranded-in-python/movix-etl:dev
+    build:
+      context: ./projects/movix-etl/
+      dockerfile: ./compose/production/etl/Dockerfile
     stdin_open: true
     restart: always
     depends_on:
