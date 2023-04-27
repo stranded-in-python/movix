@@ -71,7 +71,7 @@ services:
   etl:
     build:
       context: ./projects/movix-etl/
-      dockerfile: ./compose/production/etl/Dockerfile
+      dockerfile: ./compose/local/etl/Dockerfile
     stdin_open: true
     restart: always
     depends_on:
@@ -100,4 +100,4 @@ services:
     env_file:
       - ./.envs/.local/.api
     ports:
-      - "8001:5001"
+      - "8001:8000"
