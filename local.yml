@@ -79,6 +79,7 @@ services:
       - elastic
       - admin
       - s2p
+      - redis
     env_file:
       - ./.envs/.local/.postgres
       - ./.envs/.local/.django
