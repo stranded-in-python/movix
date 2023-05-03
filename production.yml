@@ -1,7 +1,5 @@
 version: "3.8"
 
-name: "movix_production"
-
 volumes:
   postgres_data: {}
   elastic_data: {}
