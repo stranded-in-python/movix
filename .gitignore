@@ -179,4 +179,5 @@ pyrightconfig.json
 # All productions except local
 .envs/*
 !.envs/.local
+!.envs/.*.example
 projects/
