@@ -46,7 +46,6 @@ services:
 
   s2p:
     image: ghcr.io/stranded-in-python/movix-s2p:latest
-    stdin_open: true
     depends_on:
       - admin
       - postgres
@@ -57,7 +56,6 @@ services:
 
   etl:
     image: ghcr.io/stranded-in-python/movix-etl:latest
-    stdin_open: true
     restart: always
     depends_on:
       - postgres
@@ -72,8 +70,6 @@ services:
 
   api:
     image: ghcr.io/stranded-in-python/movix-api:latest
-    image: movix_api
-    stdin_open: true
     depends_on:
       - elastic
     command: "/start"
