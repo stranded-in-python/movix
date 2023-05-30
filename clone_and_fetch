@@ -37,7 +37,7 @@ else
   git stash
   git checkout main
   git pull origin main
-  echo "Stashed changes, pulled and checked out movix-admin/main"
+  echo "Stashed changes, pulled and checked out movix-etl/main"
   cd ..
 fi
 
@@ -53,7 +53,24 @@ else
   git stash
   git checkout main
   git pull origin main
-  echo "Stashed changes, pulled and checked out movix-admin/main"
+  echo "Stashed changes, pulled and checked out movix-api/main"
+  cd ..
+fi
+
+if [ ! -d "./movix-auth" ]; then
+  echo "Not found movix-admin repo, cloning..."
+  git clone git@github.com:stranded-in-python/movix-auth.git
+else
+  echo "Updating movix-auth..."
+  cd movix-auth
+  if [ ! -f ".git/hooks/pre-push" ]; then
+    cp -f ../../.githooks/pre-push .git/hooks/
+  fi
+  git fetch
+  git stash
+  git checkout main
+  git pull origin main
+  echo "Stashed changes, pulled and checked out movix-auth/main"
   cd ..
 fi
 
