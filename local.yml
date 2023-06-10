@@ -102,3 +102,21 @@ services:
       - ./.envs/.local/.api
     ports:
       - "8001:8000"
+
+  auth:
+    build:
+      context: ./projects/movix-auth/
+      dockerfile: ./compose/local/auth/Dockerfile
+    image: movix_auth
+    stdin_open: true
+    depends_on:
+      - postgres
+      - redis
+    command: "/start"
+    volumes:
+      - ./projects/movix-auth/src:/app:z
+    env_file:
+      - ./.envs/.local/.postgres
+      - ./.envs/.local/.auth
+    ports:
+      - "8002:8000"
