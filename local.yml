@@ -108,6 +108,7 @@ services:
       context: ./projects/movix-auth/
       dockerfile: ./compose/local/auth/Dockerfile
     image: movix_auth
+    stdin_open: true
     depends_on:
       - postgres
       - redis
