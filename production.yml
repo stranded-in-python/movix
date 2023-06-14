@@ -83,7 +83,6 @@ services:
     env_file:
       - ./.envs/.production/.auth
       - ./.envs/.production/.postgres
-      - ./.envs/.production/.superuser
 
   nginx:
     image: nginx:latest
