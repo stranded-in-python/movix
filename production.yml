@@ -74,6 +74,16 @@ services:
     env_file:
       - ./.envs/.production/.api
 
+  auth:
+    image: ghcr.io/stranded-in-python/movix-etl:latest
+    depends_on:
+      - postgres
+      - redis
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.auth
+      - ./.envs/.production/.postgres
+
   nginx:
     image: nginx:latest
     depends_on:
