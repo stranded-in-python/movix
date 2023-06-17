@@ -84,6 +84,9 @@ services:
       - ./.envs/.production/.auth
       - ./.envs/.production/.postgres
 
+  jaeger:
+    image: jaegertracing/all-in-one:1.46.0
+
   nginx:
     image: nginx:latest
     depends_on:
