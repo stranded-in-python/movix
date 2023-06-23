@@ -12,6 +12,28 @@ This is a project of 7th group of 24th stream of Yandex Practicum for Middle Pyt
 
 Django 4.1, Elasticsearch, Redis, Postgres, FastAPI
 
+### Project Architecture
+
+<details>
+<summary>Scheme of Movix app</summary>
+![movix-as-is](./media/movix-as-is.png)
+</details>
+
+<details>
+<summary>Scheme of Movix-admin</summary>
+![movix-as-is](./media/movix-admin.png)
+</details>
+
+<details>
+<summary>Scheme of Movix-auth</summary>
+![movix-as-is](./media/movix-auth.png)
+</details>
+
+<details>
+<summary>Scheme of Movix-api</summary>
+![movix-as-is](./media/movix-api.png)
+</details>
+
 ## How to install
 
 You need to make shure, that ElasticSearch is configured properly on your machine to run this project: [StackOverflow Link](https://stackoverflow.com/questions/51445846/elasticsearch-max-virtual-memory-areas-vm-max-map-count-65530-is-too-low-inc)
