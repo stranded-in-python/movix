@@ -3,6 +3,7 @@
 [![API](https://github.com/stranded-in-python/movix-api/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-api/actions/workflows/ci.yml)
 [![ETL](https://github.com/stranded-in-python/movix-etl/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-etl/actions/workflows/ci.yml)
 [![Admin](https://github.com/stranded-in-python/movix-admin/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-admin/actions/workflows/ci.yml)
+[![Auth](https://github.com/stranded-in-python/movix-auth/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-auth/actions/workflows/ci.yml)
 
 ## What is this?
 
