@@ -42,6 +42,7 @@ else
 fi
 
 if [ ! -d "./movix-api" ]; then
+  echo "Not found movix-api repo, cloning..."
   git clone git@github.com:stranded-in-python/movix-api.git
 else
   echo "Updating movix-api..."
@@ -58,7 +59,7 @@ else
 fi
 
 if [ ! -d "./movix-auth" ]; then
-  echo "Not found movix-admin repo, cloning..."
+  echo "Not found movix-auth repo, cloning..."
   git clone git@github.com:stranded-in-python/movix-auth.git
 else
   echo "Updating movix-auth..."
@@ -73,5 +74,23 @@ else
   echo "Stashed changes, pulled and checked out movix-auth/main"
   cd ..
 fi
+
+if [ ! -d "./movix-ugc" ]; then
+  echo "Not found movix-ugc repo, cloning..."
+  git clone git@github.com:stranded-in-python/movix-ugc.git
+else
+  echo "Updating movix-ugc..."
+  cd movix-ugc
+  if [ ! -f ".git/hooks/pre-push" ]; then
+    cp -f ../../.githooks/pre-push .git/hooks/
+  fi
+  git fetch
+  git stash
+  git checkout main
+  git pull origin main
+  echo "Stashed changes, pulled and checked out movix-ugc/main"
+  cd ..
+fi
+
 
 cd ..

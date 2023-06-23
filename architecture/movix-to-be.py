@@ -4,9 +4,10 @@ from diagrams.elastic.saas import Elastic
 from diagrams.generic.device import Mobile
 from diagrams.generic.network import Switch
 from diagrams.onprem.client import Client
-from diagrams.onprem.database import PostgreSQL
+from diagrams.onprem.database import ClickHouse, PostgreSQL
 from diagrams.onprem.inmemory import Redis
 from diagrams.onprem.network import Nginx
+from diagrams.onprem.queue import Kafka
 from diagrams.onprem.tracing import Jaeger
 from diagrams.programming.language import Python
 
@@ -15,7 +16,7 @@ graph_attr = {
 }
 
 with Diagram(
-    "Containers compose diagram Movix - As is",
+    "Containers compose diagram Movix - To Be",
     show=False,
     outformat="png",
     graph_attr=graph_attr,
@@ -48,6 +49,12 @@ with Diagram(
             description="Provides a user-friendly interface for managing and controlling content.",
         )
 
+        ugc = Container(
+            name="User Generated Content Service",
+            technology="Python and FastAPI",
+            description="An API for pushing users actions to storage",
+        )
+
         with Cluster("ETL component"):
             etl = Python("Python Application")
 
@@ -57,6 +64,12 @@ with Diagram(
         with Cluster("Database"):
             user_schema = PostgreSQL("User Schema")
             content_schema = PostgreSQL("Content Schema")
+
+        with Cluster("UGC Storage"):
+            ugc_storage = Kafka("UGC Storage")
+
+        with Cluster("OLAP Storage"):
+            olap_storage = ClickHouse("OLAP Storage")
 
         with Cluster("Search Engine"):
             elastic = Elastic("AsyncElasticSearch")
@@ -68,14 +81,20 @@ with Diagram(
     ingress >> Edge(color="darkorange") << admin_panel
 
     ingress >> Edge(color="black", style="bold") << auth
+    ingress >> Edge(color="black", style="bold") << ugc
 
     api >> Relationship() >> elastic
     api >> Relationship() >> redis
-    api >> Relationship("Authorizing") >> auth
+    api >> Relationship("Authorizing") >> ugc_storage
 
     auth >> Relationship("CRUD") >> user_schema
+    auth >> Relationship("Update Rights topic") >> ugc_storage
     auth >> Relationship() >> redis
     auth >> Relationship() >> tracing
+
+    ugc << Relationship("Authorizing") << ugc_storage
+    ugc >> Relationship() >> ugc_storage
+    ugc >> Relationship() >> olap_storage
 
     admin_panel >> Relationship("CRUD") >> content_schema
 

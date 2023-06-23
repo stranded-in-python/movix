@@ -1,3 +1,5 @@
 -r projects/movix-admin/requirements/local.txt
 -r projects/movix-etl/requirements/local.txt
 -r projects/movix-api/requirements/local.txt
+-r projects/movix-auth/requirements/local.txt
+diagrams==0.23.3
