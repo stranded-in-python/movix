@@ -16,22 +16,22 @@ Django 4.1, Elasticsearch, Redis, Postgres, FastAPI
 
 <details>
 <summary>Scheme of Movix app</summary>
-![movix-as-is](/media/movix-as-is.png)
+![movix-as-is](media/movix-as-is.png)
 </details>
 
 <details>
 <summary>Scheme of Movix-admin</summary>
-![movix-as-is](/media/movix-admin.png)
+![movix-as-is](media/movix-admin.png)
 </details>
 
 <details>
 <summary>Scheme of Movix-auth</summary>
-![movix-as-is](/media/movix-auth.png)
+![movix-as-is](media/movix-auth.png)
 </details>
 
 <details>
 <summary>Scheme of Movix-api</summary>
-![movix-as-is](/media/movix-api.png)
+![movix-as-is](media/movix-api.png)
 </details>
 
 ## How to install
