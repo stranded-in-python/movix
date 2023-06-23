@@ -16,7 +16,7 @@ graph_attr = {
 }
 
 with Diagram(
-    "Containers compose diagram Movix - To Be",
+    "Movix-TO-BE",
     show=False,
     outformat="png",
     graph_attr=graph_attr,
@@ -50,13 +50,13 @@ with Diagram(
         )
 
         ugc = Container(
-            name="User Generated Content Service",
+            name="UGC Service",
             technology="Python and FastAPI",
-            description="An API for pushing users actions to storage",
+            description="An API for User Generated Content",
         )
 
-        with Cluster("ETL component"):
-            etl = Python("Python Application")
+        etl_elastic = Python("Elastic ETL")
+        etl_olap = Python("OLAP ETL")
 
         with Cluster("Cache Storage"):
             redis = Redis("Redis Cluster")
@@ -66,10 +66,10 @@ with Diagram(
             content_schema = PostgreSQL("Content Schema")
 
         with Cluster("UGC Storage"):
-            ugc_storage = Kafka("UGC Storage")
+            ugc_storage = Kafka("Kafka ???")
 
         with Cluster("OLAP Storage"):
-            olap_storage = ClickHouse("OLAP Storage")
+            olap_storage = ClickHouse("ClickHouse ???")
 
         with Cluster("Search Engine"):
             elastic = Elastic("AsyncElasticSearch")
@@ -85,18 +85,22 @@ with Diagram(
 
     api >> Relationship() >> elastic
     api >> Relationship() >> redis
-    api >> Relationship("Authorizing") >> ugc_storage
 
     auth >> Relationship("CRUD") >> user_schema
-    auth >> Relationship("Update Rights topic") >> ugc_storage
     auth >> Relationship() >> redis
     auth >> Relationship() >> tracing
 
-    ugc << Relationship("Authorizing") << ugc_storage
-    ugc >> Relationship() >> ugc_storage
-    ugc >> Relationship() >> olap_storage
+    (
+        ugc
+        >> Relationship()
+        >> ugc_storage
+        >> Relationship()
+        >> etl_olap
+        >> Relationship()
+        >> olap_storage
+    )
 
     admin_panel >> Relationship("CRUD") >> content_schema
 
-    user_schema >> Relationship("Extract") >> etl
-    etl >> Relationship("Load") >> elastic
+    user_schema >> Relationship("Extract") >> etl_elastic
+    etl_elastic >> Relationship("Load") >> elastic
