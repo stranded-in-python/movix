@@ -21,8 +21,6 @@ async def main():
         Engine=MergeTree() ORDER BY id""")
         
         stamp = dt.now()
-        # async for batch in generate_random_data_async():
-        #     print(*[row.values() for row in batch])
         async for batch in generate_random_data_async():
             await client.execute(
                 "INSERT INTO test_db.regular_table (id, user_id, film_id, timestamp) VALUES",
@@ -30,21 +28,13 @@ async def main():
             )
         
         print("Time elapsed %s" % str(dt.now()-stamp))
-        print("Data Sample:")
 
+        await client.execute(
+            "DROP DATABASE IF EXISTS test_db ON CLUSTER company_cluster"
+        )
         await client.execute("""
-        SELECT * FROM (
-        SELECT number%50 AS n FROM numbers(100)
-        ) ORDER BY n LIMIT 0,5""")
-        row = await client.fetchrow("SELECT * FROM test_db.regular_table LIMIT 0,5")
-        print([field for field in row])
-
-        # await client.execute(
-        #     "DROP DATABASE IF EXISTS test_db ON CLUSTER company_cluster"
-        # )
-        # await client.execute("""
-        # DROP TABLE IF EXISTS test_db.regular_table ON CLUSTER company_cluster
-        # """)
+        DROP TABLE IF EXISTS test_db.regular_table ON CLUSTER company_cluster
+        """)
 
 
 loop = asyncio.get_event_loop()
