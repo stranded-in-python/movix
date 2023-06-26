@@ -1,10 +1,12 @@
 import sys
 from threading import Thread
+
 from clickhouse_driver import Client
 from datetime import datetime as dt
 
 sys.path.append("..")
 from utils import generate_random_data, timing
+
 
 class ClickHouseTester:
     def __init__(self, clickhouse: Client = Client(host="localhost")):

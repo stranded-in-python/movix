@@ -4,7 +4,9 @@ from time import time
 from faker import Faker
 from pydantic import BaseModel
 
+
 fake = Faker()
+
 
 async def generate_random_data_async(rows: int = 10_000_000, batch_size: int = 1000) -> list[dict]:
     for _ in range(int(rows/batch_size)):
@@ -20,6 +22,7 @@ async def generate_random_data_async(rows: int = 10_000_000, batch_size: int = 1
             )
         yield random_batch
 
+
 def generate_random_data(rows: int = 10_000_000, batch_size: int = 1000) -> list[dict]:
     for _ in range(int(rows/batch_size)):
         random_batch = []
@@ -33,7 +36,6 @@ def generate_random_data(rows: int = 10_000_000, batch_size: int = 1000) -> list
                 }
             )
         yield random_batch
-
 
 
 def timing(f):
