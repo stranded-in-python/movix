@@ -23,6 +23,7 @@ class ClickHouseTester:
         (id Int64, user_id Int64, film_id Int64, timestamp DateTime64)
         Engine=MergeTree() ORDER BY id
         """)
+        self.just_write(self.ch)
 
     def _after_testing(self):
         self.ch.execute(
@@ -31,6 +32,7 @@ class ClickHouseTester:
 
     def test(self):
         self._before_testing()
+        print("--Created database, table, inserted %s rows--" % self.rows_number)
         print("--Write--")
         self.check_write(self.ch)
         print("--Read--")
@@ -41,11 +43,12 @@ class ClickHouseTester:
 
     @timing
     def check_write(self, ch: Client):
-        for batch in generate_random_data():
-            ch.execute(
-                "INSERT INTO test_db.regular_table (id, user_id, film_id, timestamp) VALUES",
-                batch
-            )
+        print("Inserted %s rows" % self.batch_size)
+        batch = next(generate_random_data())
+        ch.execute(
+            "INSERT INTO test_db.regular_table (id, user_id, film_id, timestamp) VALUES",
+            batch
+        )
     
     def just_write(self, ch: Client):
         for batch in generate_random_data():
@@ -60,8 +63,8 @@ class ClickHouseTester:
         
     @timing
     def check_read(self, ch: Client):
-        data = ch.execute("SELECT * from test_db.regular_table")[0]
-        print("Selected %s rows" % self.rows_number)
+        data = ch.execute("SELECT * from test_db.regular_table LIMIT 0,%s" % self.batch_size)[0]
+        print("Selected %s rows" % self.batch_size)
         print("Sample Data: %s" % [str(col) for col in data])
 
     @timing
@@ -79,15 +82,16 @@ if __name__=="__main__":
     tester.test()
 
 # Output
+# --Created database, table, inserted 10000000 rows--
 # --Write--
-# func:'check_write' took: 207.7547 sec
+# func:'check_write' took: 0.0220 sec
 # --Read--
-# Selected 10000000 rows
-# Sample Data: ['12881', '1006344430', '4885477888', '2003-11-08 03:05:01']
-# func:'check_read' took: 10.0420 sec
+# Selected 1000 rows
+# Sample Data: ['1509', '218846485', '6402693977', '2007-03-26 21:33:32']
+# func:'check_read' took: 0.0809 sec
 # --Read And Write While Write--
-# Selected 10000000 rows
-# Sample Data: ['6385997107', '7297643455', '2065710464', '2009-12-05 10:58:57']
-# func:'check_read' took: 11.3118 sec
-# func:'check_write' took: 217.9980 sec
-# func:'check_read_while_write' took: 229.3303 sec
+# Selected 1000 rows
+# Sample Data: ['1509', '218846485', '6402693977', '2007-03-26 21:33:32']
+# func:'check_read' took: 0.0135 sec
+# func:'check_write' took: 0.0205 sec
+# func:'check_read_while_write' took: 207.7469 sec
