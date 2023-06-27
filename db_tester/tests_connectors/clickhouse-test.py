@@ -1,5 +1,6 @@
 import sys
 from threading import Thread
+from multiprocessing import Process
 
 from clickhouse_driver import Client
 from datetime import datetime as dt
@@ -34,7 +35,7 @@ class ClickHouseTester:
         self.check_write(self.ch)
         print("--Read--")
         self.check_read(self.ch2)
-        print("--Read While Write--")
+        print("--Read And Write While Write--")
         self.check_read_while_write()
         self._after_testing()
 
@@ -45,7 +46,18 @@ class ClickHouseTester:
                 "INSERT INTO test_db.regular_table (id, user_id, film_id, timestamp) VALUES",
                 batch
             )
+    
+    def just_write(self, ch: Client):
+        for batch in generate_random_data():
+            ch.execute(
+                "INSERT INTO test_db.regular_table (id, user_id, film_id, timestamp) VALUES",
+                batch
+            )
 
+    def _check_read_while_write(self):
+        self.check_read(self.ch)
+        self.check_write(self.ch)
+        
     @timing
     def check_read(self, ch: Client):
         data = ch.execute("SELECT * from test_db.regular_table")[0]
@@ -53,13 +65,13 @@ class ClickHouseTester:
         print("Sample Data: %s" % [str(col) for col in data])
 
     @timing
-    def check_read_while_write(self): # не вижу смысла делать write_while_read
-        t1 = Thread(target=self.check_write, args=(self.ch,))
-        t2 = Thread(target=self.check_read, args=(self.ch2,))
-        t1.start()
-        t2.start()
-        t1.join()
-        t2.join()
+    def check_read_while_write(self):
+        noise = Process(target=self.just_write, args=(self.ch2,))
+        test = Process(target=self._check_read_while_write)
+        noise.start()
+        test.start()
+        noise.join()
+        test.join()
 
 
 if __name__=="__main__":
@@ -68,14 +80,14 @@ if __name__=="__main__":
 
 # Output
 # --Write--
-# func:'check_write' took: 211.6373 sec
+# func:'check_write' took: 207.7547 sec
 # --Read--
 # Selected 10000000 rows
-# Sample Data: ['4608', '247037609', '1472547859', '2006-09-23 17:03:51']
-# func:'check_read' took: 10.2997 sec
-# --Read While Write--
+# Sample Data: ['12881', '1006344430', '4885477888', '2003-11-08 03:05:01']
+# func:'check_read' took: 10.0420 sec
+# --Read And Write While Write--
 # Selected 10000000 rows
-# Sample Data: ['4608', '247037609', '1472547859', '2006-09-23 17:03:51']
-# func:'check_read' took: 13.4429 sec
-# func:'check_write' took: 224.8991 sec
-# func:'check_read_while_write' took: 224.9004 sec
+# Sample Data: ['6385997107', '7297643455', '2065710464', '2009-12-05 10:58:57']
+# func:'check_read' took: 11.3118 sec
+# func:'check_write' took: 217.9980 sec
+# func:'check_read_while_write' took: 229.3303 sec
