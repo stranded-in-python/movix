@@ -32,7 +32,7 @@ class ClickHouseTester:
 
     def test(self):
         self._before_testing()
-        print("--Created database, table, inserted %s rows--" % self.rows_number)
+        print(f"--Created database, table, inserted {self.rows_number} rows--")
         print("--Write--")
         self.check_write(self.ch)
         print("--Read--")
@@ -43,7 +43,7 @@ class ClickHouseTester:
 
     @timing
     def check_write(self, ch: Client):
-        print("Inserted %s rows" % self.batch_size)
+        print(f"Inserted {self.batch_size} rows")
         batch = next(generate_random_data())
         ch.execute(
             "INSERT INTO test_db.regular_table (id, user_id, film_id, timestamp) VALUES",
@@ -63,9 +63,9 @@ class ClickHouseTester:
         
     @timing
     def check_read(self, ch: Client):
-        data = ch.execute("SELECT * from test_db.regular_table LIMIT 0,%s" % self.batch_size)[0]
-        print("Selected %s rows" % self.batch_size)
-        print("Sample Data: %s" % [str(col) for col in data])
+        data = ch.execute(f"SELECT * from test_db.regular_table LIMIT 0,{self.batch_size}")[0]
+        print(f"Selected {self.batch_size} rows")
+        print(f"Sample Data: {[str(col) for col in data]}")
 
     @timing
     def check_read_while_write(self):
