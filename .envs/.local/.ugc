@@ -1,0 +1,6 @@
+PROJECT_NAME=movix-events
+
+VIEW_EVENT=views
+
+KAFKA_HOST=broker
+KAFKA_PORT=9092
