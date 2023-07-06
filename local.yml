@@ -150,7 +150,7 @@ services:
   ugc-api:
     build:
       context: ./projects/movix-ugc/
-      dockerfile: ./compose/api/local/Dockerfile
+      dockerfile: ./compose/local/api/Dockerfile
     command: "/start.sh"
     ports:
       - "8003:8000"
@@ -159,7 +159,7 @@ services:
   clickhouse:
     build:
       context: ./projects/movix-ugc/
-      dockerfile: ./compose/clickhouse/production/Dockerfile
+      dockerfile: ./compose/local/clickhouse/Dockerfile
     env_file:
       - ./.envs/.local/.clickhouse
     volumes:
@@ -168,7 +168,8 @@ services:
   ugc-etl:
     build:
       context: ./projects/movix-ugc/
-      dockerfile: ./compose/etl/local/Dockerfile
+      dockerfile: ./compose/local/etl/Dockerfile
+    command: "/start"
     env_file:
       - ./.envs/.local/.clickhouse
       - ./.envs/.local/.ugc
