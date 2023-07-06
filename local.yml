@@ -1,11 +1,17 @@
 version: "3.8"
 
-name: "movix_local"
+# name: "movix_local"
+# - ERROR: The Compose file './local.yml' is invalid because:
+# 'name' does not match any of the regexes: '^x-'
+
+# You might be seeing this error because you're using the wrong Compose file version. Either specify a supported version (e.g "2.2" or "3.3") and place your service definitions under the `services` key, or omit the `version` key and place your service definitions at the root of the file to use version 1.
+# For more on the Compose file format versions, see https://docs.docker.com/compose/compose-file/
 
 volumes:
   postgres_data_local: {}
   elastic_data_local: {}
   redis_data_local: {}
+  clickhouse_data_local: {}
 
 services:
   postgres:
@@ -140,3 +146,31 @@ services:
       - ./compose/local/nginx/configs:/etc/nginx/conf.d:ro
     ports:
       - "8005:80"
+  
+  ugc-api:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/local/api/Dockerfile
+    command: "/start.sh"
+    ports:
+      - "8003:8000"
+  - ./.envs/.local/.ugc
+
+  clickhouse:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/local/clickhouse/Dockerfile
+    env_file:
+      - ./.envs/.local/.clickhouse
+    volumes:
+      - clickhouse_data_local:/var/lib/clickhouse
+
+  ugc-etl:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/local/etl/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.clickhouse
+      - ./.envs/.local/.ugc
+    restart: always

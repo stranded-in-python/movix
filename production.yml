@@ -101,3 +101,9 @@ services:
       - static_data:/data
     ports:
       - "80:80"
+
+  ugc-api:
+    image: ghcr.io/stranded-in-python/movix-ugc:latest
+    command: "/start.sh"
+    env_file:
+      - ./.envs/.production/.ugc

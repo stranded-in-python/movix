@@ -1,0 +1,11 @@
+PROJECT_NAME=movix-events
+
+VIEW_EVENT=views
+
+KAFKA_HOST=broker
+KAFKA_PORT=9092
+
+KAFKA_GROUP_ID=group_watching_movies
+KAFKA_TOPIC=watching_movies
+BATCH_TIMEOUT=10
+BATCH_SIZE=10
