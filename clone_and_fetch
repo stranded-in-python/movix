@@ -27,6 +27,7 @@ fi
 
 if [ ! -d "./movix-etl" ]; then
   git clone git@github.com:stranded-in-python/movix-etl.git
+  python3.11 -m venv venv
 else
   echo "Updating movix-etl..."
   cd movix-etl
