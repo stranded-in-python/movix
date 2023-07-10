@@ -1,11 +1,6 @@
 version: "3.8"
 
-# name: "movix_local"
-# - ERROR: The Compose file './local.yml' is invalid because:
-# 'name' does not match any of the regexes: '^x-'
-
-# You might be seeing this error because you're using the wrong Compose file version. Either specify a supported version (e.g "2.2" or "3.3") and place your service definitions under the `services` key, or omit the `version` key and place your service definitions at the root of the file to use version 1.
-# For more on the Compose file format versions, see https://docs.docker.com/compose/compose-file/
+name: "movix-local"
 
 volumes:
   postgres_data_local: {}
@@ -14,138 +9,138 @@ volumes:
   clickhouse_data_local: {}
 
 services:
-  postgres:
-    image: postgres:14
-    env_file:
-      - ./.envs/.local/.postgres
-    volumes:
-      - postgres_data_local:/var/lib/postgresql/data
-    ports:
-      - "5434:5432"
+  # postgres:
+  #   image: postgres:14
+  #   env_file:
+  #     - ./.envs/.local/.postgres
+  #   volumes:
+  #     - postgres_data_local:/var/lib/postgresql/data
+  #   ports:
+  #     - "5434:5432"
 
-  admin:
-    build:
-      context: ./projects/movix-admin/
-      dockerfile: ./compose/local/django/Dockerfile
-    image: movix_admin
-    depends_on:
-      - postgres
-    volumes:
-      - ./projects/movix-admin/admin:/app:z
-    env_file:
-      - ./.envs/.local/.django
-      - ./.envs/.local/.postgres
-    stdin_open: true
-    command: "/start"
-    ports:
-      - "8000:8000"
+  # admin:
+  #   build:
+  #     context: ./projects/movix-admin/
+  #     dockerfile: ./compose/local/django/Dockerfile
+  #   image: movix_admin
+  #   depends_on:
+  #     - postgres
+  #   volumes:
+  #     - ./projects/movix-admin/admin:/app:z
+  #   env_file:
+  #     - ./.envs/.local/.django
+  #     - ./.envs/.local/.postgres
+  #   stdin_open: true
+  #   command: "/start"
+  #   ports:
+  #     - "8000:8000"
 
-  redis:
-    image: redis:7.2-rc-bullseye
-    volumes:
-      - redis_data_local:/data
-    ports:
-      - "6379:6379"
+  # redis:
+  #   image: redis:7.2-rc-bullseye
+  #   volumes:
+  #     - redis_data_local:/data
+  #   ports:
+  #     - "6379:6379"
 
-  elastic:
-    image: elasticsearch:8.7.0
-    volumes:
-      - elastic_data_local:/usr/share/elasticsearch/data
-    env_file:
-      - ./.envs/.local/.elastic
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    ports:
-      - "9200:9200"
+  # elastic:
+  #   image: elasticsearch:8.7.0
+  #   volumes:
+  #     - elastic_data_local:/usr/share/elasticsearch/data
+  #   env_file:
+  #     - ./.envs/.local/.elastic
+  #   ulimits:
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   ports:
+  #     - "9200:9200"
 
-  s2p:
-    build:
-      context: ./projects/movix-admin/
-      dockerfile: ./compose/production/sqlite_to_postgres/Dockerfile
-    image: yamp_s2p
-    stdin_open: true
-    depends_on:
-      - admin
-      - postgres
-    command: "/start"
-    env_file:
-      - ./.envs/.local/.postgres
-      - ./.envs/.local/.django
+  # s2p:
+  #   build:
+  #     context: ./projects/movix-admin/
+  #     dockerfile: ./compose/production/sqlite_to_postgres/Dockerfile
+  #   image: yamp_s2p
+  #   stdin_open: true
+  #   depends_on:
+  #     - admin
+  #     - postgres
+  #   command: "/start"
+  #   env_file:
+  #     - ./.envs/.local/.postgres
+  #     - ./.envs/.local/.django
 
-  etl:
-    build:
-      context: ./projects/movix-etl/
-      dockerfile: ./compose/local/etl/Dockerfile
-    stdin_open: true
-    restart: always
-    depends_on:
-      - postgres
-      - elastic
-      - admin
-      - s2p
-      - redis
-    env_file:
-      - ./.envs/.local/.postgres
-      - ./.envs/.local/.django
-    command: "/start"
-    volumes:
-      - ./projects/movix-etl/src/:/app:z
+  # etl:
+  #   build:
+  #     context: ./projects/movix-etl/
+  #     dockerfile: ./compose/local/etl/Dockerfile
+  #   stdin_open: true
+  #   restart: always
+  #   depends_on:
+  #     - postgres
+  #     - elastic
+  #     - admin
+  #     - s2p
+  #     - redis
+  #   env_file:
+  #     - ./.envs/.local/.postgres
+  #     - ./.envs/.local/.django
+  #   command: "/start"
+  #   volumes:
+  #     - ./projects/movix-etl/src/:/app:z
 
-  api:
-    build:
-      context: ./projects/movix-api/
-      dockerfile: ./compose/local/api/Dockerfile
-    image: movix_api
-    stdin_open: true
-    depends_on:
-      - elastic
-    command: "/start"
-    volumes:
-      - ./projects/movix-api/src:/app:z
-    env_file:
-      - ./.envs/.local/.api
-    ports:
-      - "8001:8000"
+  # api:
+  #   build:
+  #     context: ./projects/movix-api/
+  #     dockerfile: ./compose/local/api/Dockerfile
+  #   image: movix_api
+  #   stdin_open: true
+  #   depends_on:
+  #     - elastic
+  #   command: "/start"
+  #   volumes:
+  #     - ./projects/movix-api/src:/app:z
+  #   env_file:
+  #     - ./.envs/.local/.api
+  #   ports:
+  #     - "8001:8000"
 
-  auth:
-    build:
-      context: ./projects/movix-auth/
-      dockerfile: ./compose/local/auth/Dockerfile
-    image: movix_auth
-    stdin_open: true
-    depends_on:
-      - postgres
-      - redis
-    command: "/start"
-    volumes:
-      - ./projects/movix-auth/src:/app:z
-    env_file:
-      - ./.envs/.local/.postgres
-      - ./.envs/.local/.auth
-    ports:
-      - "8002:8000"
+  # auth:
+  #   build:
+  #     context: ./projects/movix-auth/
+  #     dockerfile: ./compose/local/auth/Dockerfile
+  #   image: movix_auth
+  #   stdin_open: true
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #   command: "/start"
+  #   volumes:
+  #     - ./projects/movix-auth/src:/app:z
+  #   env_file:
+  #     - ./.envs/.local/.postgres
+  #     - ./.envs/.local/.auth
+  #   ports:
+  #     - "8002:8000"
 
-  jaeger:
-    image: jaegertracing/all-in-one:1.46.0
-    ports:
-      - "6831:6831"
-      - "16686:16686"
+  # jaeger:
+  #   image: jaegertracing/all-in-one:1.46.0
+  #   ports:
+  #     - "6831:6831"
+  #     - "16686:16686"
 
-  nginx:
-    image: nginx:stable-alpine3.17
-    depends_on:
-      - postgres
-      - admin
-      - api
-      - etl
-      - auth
-    volumes:
-      - ./compose/local/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./compose/local/nginx/configs:/etc/nginx/conf.d:ro
-    ports:
-      - "8005:80"
+  # nginx:
+  #   image: nginx:stable-alpine3.17
+  #   depends_on:
+  #     - postgres
+  #     - admin
+  #     - api
+  #     - etl
+  #     - auth
+  #   volumes:
+  #     - ./compose/local/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./compose/local/nginx/configs:/etc/nginx/conf.d:ro
+  #   ports:
+  #     - "8005:80"
   
   ugc-api:
     build:
@@ -154,7 +149,8 @@ services:
     command: "/start.sh"
     ports:
       - "8003:8000"
-  - ./.envs/.local/.ugc
+    env_file:
+      - ./.envs/.local/.ugc
 
   clickhouse:
     build:
