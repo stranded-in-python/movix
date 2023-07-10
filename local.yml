@@ -160,6 +160,8 @@ services:
       - ./.envs/.local/.clickhouse
     volumes:
       - clickhouse_data_local:/var/lib/clickhouse
+    ports:
+      - "18123:8123"
 
   ugc-etl:
     build:
