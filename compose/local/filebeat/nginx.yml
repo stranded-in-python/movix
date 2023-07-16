@@ -1,0 +1,18 @@
+# https://www.elastic.co/guide/en/beats/filebeat/current/configuration-filebeat-options.html
+name: "filebeat-nginx"
+
+tags: ["nginx"]
+
+filebeat.modules:
+  # https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-module-nginx.html
+  - module: nginx
+    access:
+      enabled: true
+      var.paths: ["/var/log/nginx/access-log.log"]
+    error:
+      enabled: true
+      var.paths: ["/var/log/nginx/error.log"]
+
+output.logstash:
+  enabled: true
+  hosts: ["elk-logstash:5045"]

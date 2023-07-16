@@ -7,6 +7,10 @@ volumes:
   elastic_data_local: {}
   redis_data_local: {}
   clickhouse_data_local: {}
+  elk_elastic_tmp_local: {}
+  elk_elastic_data_local: {}
+  elk_logstash_data: {}
+  nginx_logs: {}
 
 services:
   postgres:
@@ -131,22 +135,36 @@ services:
   nginx:
     image: nginx:stable-alpine3.17
     depends_on:
-      - postgres
-      - admin
-      - api
-      - etl
-      - auth
+      # - admin
+      # - api
+      # - etl
+      # - auth
+      - ugc-api
     volumes:
       - ./compose/local/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./compose/local/nginx/configs:/etc/nginx/conf.d:ro
+      - nginx_logs:/var/log/nginx/
     ports:
       - "8005:80"
   
+  filebeat-nginx:
+    image: elastic/filebeat:8.7.1
+    volumes:
+      - nginx_logs:/var/log/nginx:ro
+      - ./compose/local/filebeat/nginx.yml:/usr/share/filebeat/filebeat.yml
+    depends_on:
+      - nginx
+      - elk-logstash
+      - elk-elasticsearch
+      - elk-kibana
+    links:
+      - elk-logstash
+
   ugc-api:
     build:
       context: ./projects/movix-ugc/
       dockerfile: ./compose/local/api/Dockerfile
-    command: "/start.sh"
+    command: "/start"
     ports:
       - "8003:8000"
     env_file:
@@ -172,3 +190,42 @@ services:
       - ./.envs/.local/.clickhouse
       - ./.envs/.local/.ugc
     restart: always
+
+  elk-logstash:
+    image: logstash:8.7.1
+    env_file:
+      ./.envs/.local/.elk-logstash 
+    ports:
+      - "5043:5043/udp"
+    volumes:
+      # Монтируем файл с конфигурацией logstash
+      - ./compose/local/logstash/logstash.conf:/config/logstash.conf:ro
+      - nginx_logs:/var/log/nginx/:ro
+    # Запускаем с указанием конфигурационного файла
+    command: logstash -f /config/logstash.conf
+
+  elk-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.0
+    # environment:
+    #   # Указываем ES запуститься в одном экземпляре
+    #   discovery.type: single-node
+    env_file:
+    - ./.envs/.local/.elk-elastic
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+    volumes:
+      - elk_elastic_tmp_local:/tmp/elasticsearch/data
+      - elk_elastic_data_local:/usr/share/elasticsearch/data
+  # Обратите внимание: не стоит использовать для ELK тот же ES, который задействован для полнотекстового поиска в вашем сервисе
+
+  elk-kibana:
+      # image: docker.elastic.co/kibana/kibana:8.7.1
+      image: kibana:8.7.1
+      ports:
+        - "5601:5601"
+      depends_on:
+        - elk-elasticsearch
