@@ -1,1 +1,1 @@
-
+SENTRY_DSN_ETL=<url to sentry's project dsn>
