@@ -4,6 +4,7 @@
 [![ETL](https://github.com/stranded-in-python/movix-etl/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-etl/actions/workflows/ci.yml)
 [![Admin](https://github.com/stranded-in-python/movix-admin/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-admin/actions/workflows/ci.yml)
 [![Auth](https://github.com/stranded-in-python/movix-auth/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-auth/actions/workflows/ci.yml)
+[![CI: UGC](https://github.com/stranded-in-python/movix-ugc/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-ugc/actions/workflows/ci.yml)
 
 ## What is this?
 
@@ -50,16 +51,44 @@ Django 4.1, Elasticsearch, Redis, Postgres, FastAPI
 
 </details>
 
+<details>
+<summary>Scheme of Movix-UGC</summary>
+
+![movix-ugc](media/movix-ugc.png)
+
+</details>
+
+
 ## How to install
 
 You need to make shure, that ElasticSearch is configured properly on your machine to run this project: [StackOverflow Link](https://stackoverflow.com/questions/51445846/elasticsearch-max-virtual-memory-areas-vm-max-map-count-65530-is-too-low-inc)
 
-For local installation run:
+For starters, we need to initialize the project:
 
 ```bash
-git clone git@github.com:stranded-in-python/movix.git && cd movix && clone_and_fetch
-docker compose -f local.yml up -d
+git clone git@github.com:stranded-in-python/movix.git && cd movix && make init
 ```
+
+For local up (whithout Kafka):
+
+```bash
+make up
+```
+
+For local up with Kafka:
+
+```bash
+make upfull
+```
+
+To stop all containers:
+
+
+```
+make down
+```
+
+
 
 ## Deployment
 
@@ -74,5 +103,5 @@ Then run:
 
 ```
 export COMPOSE_PROJECT_NAME=movix_production
-docker stack deploy -c production.yml
+docker stack deploy -c production.yml -c kafka.yml
 ```
