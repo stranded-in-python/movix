@@ -6,3 +6,4 @@ ELASTIC_INDEX='movies'
 REDIS_HOST='redis'
 REDIS_PORT=6379
 DJANGO_ENDPOINT="http://admin:5001"
+SENTRY_DSN_ADMIN="<url to sentry's project dsn>"
