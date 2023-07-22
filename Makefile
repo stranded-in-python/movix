@@ -24,13 +24,16 @@ notification:
 	docker compose -f local.yml --profiles notification up -d
 
 ugc:
-	docker compose -f local.yml --profiles ugc-api --profiles ugc-etl up -d
+	docker compose -f local.yml -f kafka.yml --profiles ugc-api --profiles ugc-etl up -d
 
 ugc-api:
 	docker compose -f local.yml --profiles ugc-api up -d
 
 ugc-etl:
-	docker compose -f local.yml --profiles ugc-etl up -d
+	docker compose -f local.yml -f kafka.yml --profiles ugc-etl up -d
+
+ugc-api:
+	docker compose -f local.yml --profiles ugc-api --profiles nginx --profiles logging up -d
 
 down:
 	docker-compose -f local.yml -f kafka.yml --profiles all down
