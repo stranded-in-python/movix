@@ -32,6 +32,9 @@ ugc-api:
 ugc-etl:
 	docker compose -f local.yml -f kafka.yml --profiles ugc-etl up -d
 
+ugc-api:
+	docker compose -f local.yml --profiles ugc-api --profiles nginx --profiles logging up -d
+
 down:
 	docker-compose -f local.yml -f kafka.yml --profiles all down
 
