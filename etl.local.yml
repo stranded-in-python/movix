@@ -1,0 +1,68 @@
+version: "3.8"
+
+services:
+
+  ugc-etl-watching:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/local/etl/watching/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.clickhouse
+      - ./.envs/.local/.ugc
+    restart: always
+    profiles:
+      - "all"
+      - "ugc-etl"
+
+  ugc-etl-bookmarks:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/local/etl/bookmarks/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.clickhouse
+      - ./.envs/.local/.ugc
+    restart: always
+    profiles:
+      - "all"
+      - "ugc-etl"
+
+  ugc-etl-reviews:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/local/etl/reviews/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.clickhouse
+      - ./.envs/.local/.ugc
+    restart: always
+    profiles:
+      - "all"
+      - "ugc-etl"
+
+  ugc-etl-likes_movies:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/local/etl/likes_movies/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.clickhouse
+      - ./.envs/.local/.ugc
+    restart: always
+    profiles:
+      - "all"
+      - "ugc-etl"
+
+  ugc-etl-likes_reviews:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/local/etl/likes_reviews/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.clickhouse
+      - ./.envs/.local/.ugc
+    restart: always
+    profiles:
+      - "all"
+      - "ugc-etl"

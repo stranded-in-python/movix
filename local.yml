@@ -202,16 +202,3 @@ services:
     profiles:
       - "all"
       - "ugc-etl"
-
-  ugc-etl:
-    build:
-      context: ./projects/movix-ugc/
-      dockerfile: ./compose/local/etl/Dockerfile
-    command: "/start"
-    env_file:
-      - ./.envs/.local/.clickhouse
-      - ./.envs/.local/.ugc
-    restart: always
-    profiles:
-      - "all"
-      - "ugc-etl"
