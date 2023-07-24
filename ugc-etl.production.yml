@@ -1,0 +1,77 @@
+version: "3.8"
+
+services:
+  ugc-etl-watching:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/production/etl/watching/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.clickhouse
+      - ./.envs/.production/.ugc
+    restart: always
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: ugc-etl-watching
+
+  ugc-etl-bookmarks:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/production/etl/bookmarks/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.clickhouse
+      - ./.envs/.production/.ugc
+    restart: always
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: ugc-etl-bookmarks
+
+  ugc-etl-reviews:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/production/etl/reviews/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.clickhouse
+      - ./.envs/.production/.ugc
+    restart: always
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: ugc-etl-reviews
+
+  ugc-etl-likes_movies:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/production/etl/likes_movies/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.clickhouse
+      - ./.envs/.production/.ugc
+    restart: always
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: ugc-etl-likes_movies
+
+  ugc-etl-likes_reviews:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/production/etl/likes_reviews/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.clickhouse
+      - ./.envs/.production/.ugc
+    restart: always
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: ugc-etl-likes_reviews

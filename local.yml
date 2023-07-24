@@ -132,9 +132,6 @@ services:
     restart: always
     depends_on:
       - postgres
-      - elastic
-      - admin
-      - s2p
       - redis
     env_file:
       - ./.envs/.local/.postgres
@@ -213,12 +210,6 @@ services:
 
   nginx:
     image: nginx:stable-alpine3.17
-    depends_on:
-      # - admin
-      # - api
-      # - etl
-      # - auth
-      - ugc-api
     volumes:
       - ./compose/local/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./compose/local/nginx/configs:/etc/nginx/conf.d:ro
