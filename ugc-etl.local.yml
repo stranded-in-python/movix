@@ -16,8 +16,8 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: udp://logstash:5045
-        tag: ugc-etl-watching
+        gelf-address: udp://localhost:9045
+        tag: "{{.ImageName}}"
 
   ugc-etl-bookmarks:
     build:
@@ -34,8 +34,8 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: udp://logstash:5045
-        tag: ugc-etl-bookmarks
+        gelf-address: udp://localhost:9045
+        tag: ugc-etl
 
   ugc-etl-reviews:
     build:
@@ -52,8 +52,8 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: udp://logstash:5045
-        tag: ugc-etl-reviews
+        gelf-address: udp://localhost:9045
+        tag: ugc-etl
 
   ugc-etl-likes_movies:
     build:
@@ -70,8 +70,8 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: udp://logstash:5045
-        tag: ugc-etl-likes_movies
+        gelf-address: udp://localhost:9045
+        tag: ugc-etl
 
   ugc-etl-likes_reviews:
     build:
@@ -88,5 +88,5 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: udp://logstash:5045
+        gelf-address: udp://localhost:9045
         tag: ugc-etl-likes_reviews

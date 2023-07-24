@@ -1,2 +1,0 @@
-XPACK_MONITORING_ENABLED="false"
-ES_HOST="elk-elasticsearch:9200"

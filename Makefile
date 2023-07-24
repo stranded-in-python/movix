@@ -1,40 +1,40 @@
 init:
-	clone_and_fetch && docker compose -f local.yml --profiles init up -d
+	clone_and_fetch && docker compose -f local.yml --profile init up -d
 
 
 all:
-	docker compose -f local.yml -f kafka.yml -f ugc-etl.local.yml --profiles all up -d
+	docker compose -f local.yml -f kafka.yml -f ugc-etl.local.yml --profile all up -d
 
 up:
-	docker compose -f local.yml --profiles all up -d
+	docker compose -f local.yml --profile all up -d
 
 admin:
-	docker compose -f local.yml --profiles admin up -d
+	docker compose -f local.yml --profile admin up -d
 
 api:
-	docker compose -f local.yml --profiles api up -d
+	docker compose -f local.yml --profile api up -d
 
 auth:
-	docker compose -f local.yml --profiles auth up -d
+	docker compose -f local.yml --profile auth up -d
 
 etl:
-	docker compose -f local.yml --profiles etl up -d
+	docker compose -f local.yml --profile etl up -d
 
 notification:
-	docker compose -f local.yml --profiles notification up -d
+	docker compose -f local.yml --profile notification up -d
 
 ugc:
-	docker compose -f local.yml -f kafka.yml -f etl.local.yml --profiles ugc-api --profiles ugc-etl up -d
+	docker compose -f local.yml -f kafka.yml -f etl.local.yml --profile ugc-api --profile ugc-etl up -d
 
 ugc-api:
-	docker compose -f local.yml --profiles ugc-api up -d
+	docker compose -f local.yml --profile ugc-api up -d
 
 ugc-etl:
-	docker compose -f local.yml -f kafka.yml -f etl.local.yml --profiles ugc-etl up -d
+	docker compose -f local.yml -f kafka.yml -f etl.local.yml --profile ugc-etl up -d
 
 ugc-api:
-	docker compose -f local.yml --profiles ugc-api --profiles nginx --profiles logging up -d
+	docker compose -f local.yml --profile ugc-api --profile nginx --profile logging up -d
 
 down:
-	docker-compose -f local.yml -f ugc-etl.local.yml -f kafka.yml --profiles all down
+	docker-compose -f local.yml -f ugc-etl.local.yml -f kafka.yml --profile all down
 
