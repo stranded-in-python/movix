@@ -7,9 +7,7 @@ volumes:
   elastic_data_local: {}
   redis_data_local: {}
   clickhouse_data_local: {}
-  elk_elastic_tmp_local: {}
-  elk_elastic_data_local: {}
-  elk_logstash_data: {}
+  logstash_data: {}
   nginx_logs: {}
 
 services:
@@ -21,6 +19,12 @@ services:
       - postgres_data_local:/var/lib/postgresql/data
     ports:
       - "5434:5432"
+    profiles:
+      - "admin"
+      - "all"
+      - "auth"
+      - "etl"
+      - "init"
 
   admin:
     build:
@@ -38,6 +42,16 @@ services:
     command: "/start"
     ports:
       - "8000:8000"
+    profiles:
+      - "admin"
+      - "all"
+      - "init"
+      - "notification"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: admin
 
   redis:
     image: redis:7.2-rc-bullseye
@@ -58,6 +72,34 @@ services:
         hard: -1
     ports:
       - "9200:9200"
+    profiles:
+      - "all"
+      - "api"
+      - "etl"
+      - "logging"
+
+  logstash:
+    image: elastic/logstash:8.7.0
+    env_file:
+      - ./envs/.local/.logstash
+    volumes:
+      - ./compose/production/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./compose/production/logstash/conf.d/:/etc/logstash/conf.d/:ro
+    ports:
+      - "9045:5045"
+    profiles:
+      - "all"
+      - "logging"
+
+  kibana:
+    image: elastic/kibana:8.7.0
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elastic
+    profiles:
+      - "all"
+      - "logging"
 
   s2p:
     build:
@@ -72,6 +114,15 @@ services:
     env_file:
       - ./.envs/.local/.postgres
       - ./.envs/.local/.django
+    profiles:
+      - "admin"
+      - "all"
+      - "init"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: s2p
 
   etl:
     build:
@@ -91,6 +142,15 @@ services:
     command: "/start"
     volumes:
       - ./projects/movix-etl/src/:/app:z
+    profiles:
+      - "all"
+      - "etl"
+      - "init"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: etl
 
   api:
     build:
@@ -107,6 +167,14 @@ services:
       - ./.envs/.local/.api
     ports:
       - "8001:8000"
+    profiles:
+      - "all"
+      - "api"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: api
 
   auth:
     build:
@@ -125,12 +193,23 @@ services:
       - ./.envs/.local/.auth
     ports:
       - "8002:8000"
+    profiles:
+      - "all"
+      - "auth"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: auth
 
   jaeger:
     image: jaegertracing/all-in-one:1.46.0
     ports:
       - "6831:6831"
       - "16686:16686"
+    profiles:
+      - "all"
+      - "tracing"
 
   nginx:
     image: nginx:stable-alpine3.17
@@ -146,19 +225,14 @@ services:
       - nginx_logs:/var/log/nginx/
     ports:
       - "8005:80"
-  
-  filebeat-nginx:
-    image: elastic/filebeat:8.7.1
-    volumes:
-      - nginx_logs:/var/log/nginx:ro
-      - ./compose/local/filebeat/nginx.yml:/usr/share/filebeat/filebeat.yml
-    depends_on:
-      - nginx
-      - elk-logstash
-      - elk-elasticsearch
-      - elk-kibana
-    links:
-      - elk-logstash
+    profiles:
+      - "all"
+      - "nginx"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: nginx
 
   ugc-api:
     build:
@@ -169,6 +243,14 @@ services:
       - "8003:8000"
     env_file:
       - ./.envs/.local/.ugc
+    profiles:
+      - "all"
+      - "ugc-api"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: ugc-api
 
   clickhouse:
     build:
@@ -180,52 +262,6 @@ services:
       - clickhouse_data_local:/var/lib/clickhouse
     ports:
       - "18123:8123"
-
-  ugc-etl:
-    build:
-      context: ./projects/movix-ugc/
-      dockerfile: ./compose/local/etl/Dockerfile
-    command: "/start"
-    env_file:
-      - ./.envs/.local/.clickhouse
-      - ./.envs/.local/.ugc
-    restart: always
-
-  elk-logstash:
-    image: logstash:8.7.1
-    env_file:
-      ./.envs/.local/.elk-logstash 
-    ports:
-      - "5043:5043/udp"
-    volumes:
-      # Монтируем файл с конфигурацией logstash
-      - ./compose/local/logstash/logstash.conf:/config/logstash.conf:ro
-      - nginx_logs:/var/log/nginx/:ro
-    # Запускаем с указанием конфигурационного файла
-    command: logstash -f /config/logstash.conf
-
-  elk-elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.0
-    # environment:
-    #   # Указываем ES запуститься в одном экземпляре
-    #   discovery.type: single-node
-    env_file:
-    - ./.envs/.local/.elk-elastic
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    ports:
-      - 9200:9200
-    volumes:
-      - elk_elastic_tmp_local:/tmp/elasticsearch/data
-      - elk_elastic_data_local:/usr/share/elasticsearch/data
-  # Обратите внимание: не стоит использовать для ELK тот же ES, который задействован для полнотекстового поиска в вашем сервисе
-
-  elk-kibana:
-      # image: docker.elastic.co/kibana/kibana:8.7.1
-      image: kibana:8.7.1
-      ports:
-        - "5601:5601"
-      depends_on:
-        - elk-elasticsearch
+    profiles:
+      - "all"
+      - "ugc-etl"

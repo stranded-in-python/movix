@@ -22,3 +22,4 @@ JAEGER_ENABLED=true
 TRACER_ENABLED=true
 JWT_SECRET_KEY="ACCESS"
 rate_limits=true
+SENTRY_DSN_AUTH="<url to sentry's project dsn>"

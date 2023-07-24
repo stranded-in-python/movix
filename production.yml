@@ -1,6 +1,7 @@
 version: "3.8"
 
 volumes:
+  clickhouse_data: {}
   postgres_data: {}
   elastic_data: {}
   redis_data: {}
@@ -102,8 +103,24 @@ services:
     ports:
       - "80:80"
 
+  clickhouse:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/production/clickhouse/Dockerfile
+    env_file:
+      - ./.envs/.production/.clickhouse
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+
   ugc-api:
     image: ghcr.io/stranded-in-python/movix-ugc:latest
-    command: "/start.sh"
+    command: "/start"
     env_file:
+      - ./.envs/.production/.ugc
+
+  ugc-etl:
+    image: ghcr.io/stranded-in-python/movix-etl:latest
+    command: "/start"
+    env_file:
+      - ./.envs/.produciton/.clickhouse
       - ./.envs/.production/.ugc

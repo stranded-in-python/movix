@@ -9,3 +9,5 @@ KAFKA_GROUP_ID=group_watching_movies
 KAFKA_TOPIC=watching_movies
 BATCH_TIMEOUT=10
 BATCH_SIZE=10
+SENTRY_DSN_UGC_API="<url to sentry's project dsn>"
+SENTRY_DSN_UGC_ETL="<url to sentry's project dsn>"
