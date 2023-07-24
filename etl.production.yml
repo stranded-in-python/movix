@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+
+  ugc-etl-watching:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/production/etl/watching/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.clickhouse
+      - ./.envs/.production/.ugc
+    restart: always
+
+  ugc-etl-bookmarks:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/production/etl/bookmarks/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.clickhouse
+      - ./.envs/.production/.ugc
+    restart: always
+
+  ugc-etl-reviews:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/production/etl/reviews/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.clickhouse
+      - ./.envs/.production/.ugc
+    restart: always
+
+  ugc-etl-likes_movies:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/production/etl/likes_movies/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.clickhouse
+      - ./.envs/.production/.ugc
+    restart: always
+
+  ugc-etl-likes_reviews:
+    build:
+      context: ./projects/movix-ugc/
+      dockerfile: ./compose/production/etl/likes_reviews/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.clickhouse
+      - ./.envs/.production/.ugc
+    restart: always

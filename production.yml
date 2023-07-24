@@ -117,10 +117,3 @@ services:
     command: "/start"
     env_file:
       - ./.envs/.production/.ugc
-
-  ugc-etl:
-    image: ghcr.io/stranded-in-python/movix-etl:latest
-    command: "/start"
-    env_file:
-      - ./.envs/.produciton/.clickhouse
-      - ./.envs/.production/.ugc
