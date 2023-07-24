@@ -45,6 +45,11 @@ services:
       - "all"
       - "init"
       - "notification"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: admin
 
   redis:
     image: redis:7.2-rc-bullseye
@@ -71,6 +76,29 @@ services:
       - "etl"
       - "logging"
 
+  logstash:
+    image: elastic/logstash:8.7.0
+    env_file:
+      - ./envs/.local/.logstash
+    volumes:
+      - ./compose/production/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./compose/production/logstash/conf.d/:/etc/logstash/conf.d/:ro
+    ports:
+      - "9045:5045"
+    profiles:
+      - "all"
+      - "logging"
+
+  kibana:
+    image: elastic/kibana:8.7.0
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elastic
+    profiles:
+      - "all"
+      - "logging"
+
   s2p:
     build:
       context: ./projects/movix-admin/
@@ -88,6 +116,11 @@ services:
       - "admin"
       - "all"
       - "init"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: s2p
 
   etl:
     build:
@@ -111,6 +144,11 @@ services:
       - "all"
       - "etl"
       - "init"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: etl
 
   api:
     build:
@@ -130,6 +168,11 @@ services:
     profiles:
       - "all"
       - "api"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: api
 
   auth:
     build:
@@ -151,6 +194,11 @@ services:
     profiles:
       - "all"
       - "auth"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: auth
 
   jaeger:
     image: jaegertracing/all-in-one:1.46.0
@@ -177,6 +225,11 @@ services:
     profiles:
       - "all"
       - "nginx"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: nginx
 
   ugc-api:
     build:
@@ -190,6 +243,11 @@ services:
     profiles:
       - "all"
       - "ugc-api"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:5045
+        tag: ugc-api
 
   clickhouse:
     build:
