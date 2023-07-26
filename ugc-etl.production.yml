@@ -1,7 +1,6 @@
 version: "3.8"
 
 services:
-
   ugc-etl-watching:
     build:
       context: ./projects/movix-ugc/
@@ -11,6 +10,11 @@ services:
       - ./.envs/.production/.clickhouse
       - ./.envs/.production/.ugc
     restart: always
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:9045
+        tag: ugc-etl-watching
 
   ugc-etl-bookmarks:
     build:
@@ -21,6 +25,11 @@ services:
       - ./.envs/.production/.clickhouse
       - ./.envs/.production/.ugc
     restart: always
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:9045
+        tag: ugc-etl-bookmarks
 
   ugc-etl-reviews:
     build:
@@ -31,6 +40,11 @@ services:
       - ./.envs/.production/.clickhouse
       - ./.envs/.production/.ugc
     restart: always
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:9045
+        tag: ugc-etl-reviews
 
   ugc-etl-likes_movies:
     build:
@@ -41,6 +55,11 @@ services:
       - ./.envs/.production/.clickhouse
       - ./.envs/.production/.ugc
     restart: always
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:9045
+        tag: ugc-etl-likes_movies
 
   ugc-etl-likes_reviews:
     build:
@@ -51,3 +70,8 @@ services:
       - ./.envs/.production/.clickhouse
       - ./.envs/.production/.ugc
     restart: always
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:9045
+        tag: ugc-etl-likes_reviews

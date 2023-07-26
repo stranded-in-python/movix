@@ -5,8 +5,10 @@ name: "movix-local"
 volumes:
   postgres_data_local: {}
   elastic_data_local: {}
+  elk_data_local: {}
   redis_data_local: {}
   clickhouse_data_local: {}
+  nginx_logs: {}
 
 services:
   postgres:
@@ -45,6 +47,11 @@ services:
       - "all"
       - "init"
       - "notification"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://localhost:9045"
+        tag: "admin"
 
   redis:
     image: redis:7.2-rc-bullseye
@@ -69,6 +76,38 @@ services:
       - "all"
       - "api"
       - "etl"
+
+  elasticsearch:
+    image: elasticsearch:8.7.0
+    volumes:
+      - elk_data_local:/usr/share/elasticsearch/data
+    env_file:
+      - ./.envs/.local/.elastic
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9201:9200"
+
+  logstash:
+    image: elastic/logstash:8.7.0
+    env_file:
+      - ./.envs/.local/.logstash
+    volumes:
+      - ./compose/production/logstash/logstash.conf:/config/logstash.conf:ro
+    command: logstash -f /config/logstash.conf
+    ports:
+      - "9045:9045"
+
+  kibana:
+    image: elastic/kibana:8.7.0
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
+    profiles:
+      - "all"
       - "logging"
 
   s2p:
@@ -88,6 +127,11 @@ services:
       - "admin"
       - "all"
       - "init"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://localhost:9045"
+        tag: "s2p"
 
   etl:
     build:
@@ -97,9 +141,6 @@ services:
     restart: always
     depends_on:
       - postgres
-      - elastic
-      - admin
-      - s2p
       - redis
     env_file:
       - ./.envs/.local/.postgres
@@ -111,6 +152,11 @@ services:
       - "all"
       - "etl"
       - "init"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://localhost:9045"
+        tag: "etl"
 
   api:
     build:
@@ -130,6 +176,11 @@ services:
     profiles:
       - "all"
       - "api"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://localhost:9045"
+        tag: "api"
 
   auth:
     build:
@@ -151,6 +202,11 @@ services:
     profiles:
       - "all"
       - "auth"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://localhost:9045"
+        tag: "auth"
 
   jaeger:
     image: jaegertracing/all-in-one:1.46.0
@@ -163,26 +219,26 @@ services:
 
   nginx:
     image: nginx:stable-alpine3.17
-    depends_on:
-      - postgres
-      - admin
-      - api
-      - etl
-      - auth
     volumes:
       - ./compose/local/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./compose/local/nginx/configs:/etc/nginx/conf.d:ro
+      - nginx_logs:/var/log/nginx/
     ports:
       - "8005:80"
     profiles:
       - "all"
       - "nginx"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://localhost:9045"
+        tag: "nginx"
 
   ugc-api:
     build:
       context: ./projects/movix-ugc/
       dockerfile: ./compose/local/api/Dockerfile
-    command: "/start.sh"
+    command: "/start"
     ports:
       - "8003:8000"
     env_file:
@@ -190,6 +246,11 @@ services:
     profiles:
       - "all"
       - "ugc-api"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://localhost:9045"
+        tag: "ugc-api"
 
   clickhouse:
     build:
@@ -199,6 +260,8 @@ services:
       - ./.envs/.local/.clickhouse
     volumes:
       - clickhouse_data_local:/var/lib/clickhouse
+    ports:
+      - "18123:8123"
     profiles:
       - "all"
       - "ugc-etl"

@@ -1,7 +1,6 @@
 version: "3.8"
 
 services:
-
   ugc-etl-watching:
     build:
       context: ./projects/movix-ugc/
@@ -14,6 +13,11 @@ services:
     profiles:
       - "all"
       - "ugc-etl"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:9045
+        tag: "{{.ImageName}}"
 
   ugc-etl-bookmarks:
     build:
@@ -27,6 +31,11 @@ services:
     profiles:
       - "all"
       - "ugc-etl"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:9045
+        tag: ugc-etl
 
   ugc-etl-reviews:
     build:
@@ -40,6 +49,11 @@ services:
     profiles:
       - "all"
       - "ugc-etl"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:9045
+        tag: ugc-etl
 
   ugc-etl-likes_movies:
     build:
@@ -53,6 +67,11 @@ services:
     profiles:
       - "all"
       - "ugc-etl"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:9045
+        tag: ugc-etl
 
   ugc-etl-likes_reviews:
     build:
@@ -66,3 +85,8 @@ services:
     profiles:
       - "all"
       - "ugc-etl"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:9045
+        tag: ugc-etl-likes_reviews
