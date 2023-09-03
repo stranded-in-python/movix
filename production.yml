@@ -147,3 +147,24 @@ services:
     command: "/start"
     env_file:
       - ./.envs/.production/.ugc
+
+  notification-rmq:
+    image: rabbitmq:3.6-management-alpine
+
+  notification-api:
+    image: ghcr.io/stranded-in-python/movix-notification-api:latest
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.notification/.api
+
+  notification-scheduler:
+    image: ghcr.io/stranded-in-python/movix-notification-scheduler:latest
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.notification/.scheduler
+
+  notification-worker:
+    image: ghcr.io/stranded-in-python/movix-notification-worker:latest
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.notification/.worker

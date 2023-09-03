@@ -265,3 +265,33 @@ services:
     profiles:
       - "all"
       - "ugc-etl"
+
+  notification-rmq:
+    image: rabbitmq:3.6-management-alpine
+    ports:
+      - 15672:15672
+      - 5672:5672
+
+  notification-api:
+    build:
+      context: ./projects/movix-notification/
+      dockerfile: ./compose/local/api/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.notification/.api
+
+  notification-scheduler:
+    build:
+      context: ./projects/movix-notification/
+      dockerfile: ./compose/local/scheduler/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.notification/.scheduler
+
+  notification-worker:
+    build:
+      context: ./projects/movix-notification/
+      dockerfile: ./compose/local/worker/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.notification/.worker
