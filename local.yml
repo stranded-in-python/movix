@@ -21,6 +21,7 @@ services:
       - "5434:5432"
     profiles:
       - "admin"
+      - "notification"
       - "all"
       - "auth"
       - "etl"
@@ -271,6 +272,9 @@ services:
     ports:
       - 15672:15672
       - 5672:5672
+    profiles:
+      - "all"
+      - "notification"
 
   notification-api:
     build:
@@ -279,6 +283,9 @@ services:
     command: "/start"
     env_file:
       - ./.envs/.local/.notification/.api
+    profiles:
+      - "all"
+      - "notification"
 
   notification-scheduler:
     build:
@@ -287,6 +294,9 @@ services:
     command: "/start"
     env_file:
       - ./.envs/.local/.notification/.scheduler
+    profiles:
+      - "all"
+      - "notification"
 
   notification-worker:
     build:
@@ -295,3 +305,6 @@ services:
     command: "/start"
     env_file:
       - ./.envs/.local/.notification/.worker
+    profiles:
+      - "all"
+      - "notification"
