@@ -93,5 +93,39 @@ else
   cd ..
 fi
 
+if [ ! -d "./movix-notification" ]; then
+  echo "Not found movix-notificationugc repo, cloning..."
+  git clone git@github.com:stranded-in-python/movix-notification.git
+else
+  echo "Updating movix-notification..."
+  cd movix-ugc
+  if [ ! -f ".git/hooks/pre-push" ]; then
+    cp -f ../../.githooks/pre-push .git/hooks/
+  fi
+  git fetch
+  git stash
+  git checkout main
+  git pull origin main
+  echo "Stashed changes, pulled and checked out movix-notification/main"
+  cd ..
+fi
+
+if [ ! -d "./movix-billing" ]; then
+  echo "Not found movix-ugc repo, cloning..."
+  git clone git@github.com:stranded-in-python/movix-billing.git
+else
+  echo "Updating movix-billing..."
+  cd movix-ugc
+  if [ ! -f ".git/hooks/pre-push" ]; then
+    cp -f ../../.githooks/pre-push .git/hooks/
+  fi
+  git fetch
+  git stash
+  git checkout main
+  git pull origin main
+  echo "Stashed changes, pulled and checked out movix-billing/main"
+  cd ..
+fi
+
 
 cd ..
