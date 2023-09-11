@@ -4,6 +4,7 @@ volumes:
   clickhouse_data: {}
   postgres_data: {}
   elastic_data: {}
+  scheduler_data: {}
   elk_data: {}
   redis_data: {}
   static_data: {}
@@ -160,6 +161,8 @@ services:
   notification-scheduler:
     image: ghcr.io/stranded-in-python/movix-notification-scheduler:latest
     command: "/start"
+    volumes:
+      - scheduler_data:/etc/cron.d
     env_file:
       - ./.envs/.production/.notification/.scheduler
 

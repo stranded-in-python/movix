@@ -8,6 +8,7 @@ volumes:
   elk_data_local: {}
   redis_data_local: {}
   clickhouse_data_local: {}
+  scheduler_data_local: {}
   nginx_logs: {}
 
 services:
@@ -115,7 +116,7 @@ services:
 
   s2p:
     build:
-      context: ./projects/movix-admin/
+      context: ./projects/movix-sqlite-etl/
       dockerfile: ./compose/production/sqlite_to_postgres/Dockerfile
     image: yamp_s2p
     stdin_open: true
@@ -291,11 +292,13 @@ services:
 
   notification-scheduler:
     build:
-      context: ./projects/movix-notification/
-      dockerfile: ./compose/local/scheduler/Dockerfile
+      context: ./projects/movix-notification-scheduler/
+      dockerfile: ./compose/local/Dockerfile
     command: "/start"
     env_file:
       - ./.envs/.local/.notification/.scheduler
+    volumes:
+      - scheduler_data_local:/etc/cron.d
     profiles:
       - "all"
       - "notification"

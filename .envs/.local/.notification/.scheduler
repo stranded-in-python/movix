@@ -1,0 +1,4 @@
+NOTIFICATION_URL="http://notification-api:8000/notification"
+ETL_LOG_LEVEL=info
+REDIS_HOST='redis'
+REDIS_PORT=6379
