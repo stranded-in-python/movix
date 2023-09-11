@@ -60,6 +60,8 @@ services:
       - redis_data_local:/data
     ports:
       - "6379:6379"
+    profiles:
+      - "all"
 
   elastic:
     image: elasticsearch:8.7.0
@@ -305,6 +307,25 @@ services:
     command: "/start"
     env_file:
       - ./.envs/.local/.notification/.worker
+      - ./.envs/.local/.notification/.rabbitmq
+      - ./.envs/.local/.notification/.postgres
+    depends_on:
+      - postgres
+      - notification-rmq
+    profiles:
+      - "all"
+      - "notification"
+
+  notification-shortener:
+    build:
+      context: ./projects/movix-notification/
+      dockerfile: ./compose/local/shortener/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.notification/.shortener
+      - ./.envs/.local/.notification/.redis
+    depends_on:
+      - redis
     profiles:
       - "all"
       - "notification"

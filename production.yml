@@ -168,3 +168,19 @@ services:
     command: "/start"
     env_file:
       - ./.envs/.production/.notification/.worker
+      - ./.envs/.production/.notification/.rabbitmq
+      - ./.envs/.production/.notification/.postgres
+    depends_on:
+      - postgres
+      - notification-rmq
+
+  notification-shortener:
+    build:
+      context: ./projects/movix-notification/
+      dockerfile: ./compose/local/shortener/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.notification/.shortener
+      - ./.envs/.production/.notification/.redis
+    depends_on:
+      - redis
