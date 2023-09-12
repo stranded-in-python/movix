@@ -61,8 +61,6 @@ Django 4.1, Elasticsearch, Redis, Postgres, FastAPI
 ![movix-ugc](media/movix-ugc.png)
 
 </details>
-
-</details>
 <summary>Scheme of Movix-notification</summary>
 
 ![image](https://github.com/stranded-in-python/movix/assets/5788811/baf91d5f-8ba4-4b63-af91-01dc03405911)
