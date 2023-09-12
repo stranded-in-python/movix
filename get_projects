@@ -28,7 +28,7 @@ for repo in $repos; do
     pip install -r $default_requirements
     # check if pre-commit is installed
     if [ $(which pre-commit) ]; then 
-      pre-commit install --hook-stage pre-commit --hook-stage pre-push --hook-stage pre-merge-commit
+      pre-commit install --hook-type pre-commit --hook-type pre-push --hook-type pre-merge-commit
     fi
     deactivate
     cd ..
