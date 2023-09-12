@@ -12,7 +12,7 @@
 
 ## What is this?
 
-This is a project of 7th group of 24th stream of Yandex Practicum for Middle Python Developers. The goal of the project is to build a online streaming platform.
+This is a project of 11th group of 25th stream (previously 7th of 24th) of Yandex Practicum for Middle Python Developers. The goal of the project is to build a online streaming platform.
 
 ## What is under the hood?
 
