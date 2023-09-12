@@ -26,7 +26,10 @@ for repo in $repos; do
     python${python_version} -m venv $default_venv_folder
     source $default_venv_folder/bin/activate
     pip install -r $default_requirements
-    pre-commit install --hook-stage pre-commit --hook-stage pre-push --hook-stage pre-merge-commit
+    # check if pre-commit is installed
+    if [ $(which pre-commit) ]; then 
+      pre-commit install --hook-stage pre-commit --hook-stage pre-push --hook-stage pre-merge-commit
+    fi
     deactivate
     cd ..
     echo "Installed and configured ${repo}"

@@ -6,6 +6,10 @@
 [![Auth](https://github.com/stranded-in-python/movix-auth/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-auth/actions/workflows/ci.yml)
 [![CI: UGC](https://github.com/stranded-in-python/movix-ugc/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-ugc/actions/workflows/ci.yml)
 
+[![CI: Notif-Worker](https://github.com/stranded-in-python/movix-notification-worker/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-notification-worker/actions/workflows/ci.yml)
+[![CI: Notif-API](https://github.com/stranded-in-python/movix-notification-api/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-notification-api/actions/workflows/ci.yml)
+[![CI: Notif-scheduler](https://github.com/stranded-in-python/movix-notification-scheduler/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-notification-scheduler/actions/workflows/ci.yml)
+
 ## What is this?
 
 This is a project of 7th group of 24th stream of Yandex Practicum for Middle Python Developers. The goal of the project is to build a online streaming platform.
@@ -58,7 +62,6 @@ Django 4.1, Elasticsearch, Redis, Postgres, FastAPI
 
 </details>
 
-
 ## How to install
 
 You need to make shure, that ElasticSearch is configured properly on your machine to run this project: [StackOverflow Link](https://stackoverflow.com/questions/51445846/elasticsearch-max-virtual-memory-areas-vm-max-map-count-65530-is-too-low-inc)
@@ -83,12 +86,9 @@ make upfull
 
 To stop all containers:
 
-
 ```
 make down
 ```
-
-
 
 ## Deployment
 
