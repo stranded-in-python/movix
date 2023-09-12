@@ -1,5 +1,5 @@
 init:
-	clone_and_fetch && docker compose -f local.yml --profile init up -d
+	get_projects && docker compose -f local.yml --profile init up -d
 
 
 all:
