@@ -7,3 +7,4 @@ ELASTIC_INDEX='movies'
 REDIS_HOST='redis'
 REDIS_PORT=6379
 DJANGO_ENDPOINT="http://admin:8000"
+NOTIFICATION_API_ENPOINT='http://notification-api:8000'

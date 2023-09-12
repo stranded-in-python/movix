@@ -8,6 +8,7 @@ volumes:
   elk_data_local: {}
   redis_data_local: {}
   clickhouse_data_local: {}
+  scheduler_data_local: {}
   nginx_logs: {}
 
 services:
@@ -21,6 +22,7 @@ services:
       - "5434:5432"
     profiles:
       - "admin"
+      - "notification"
       - "all"
       - "auth"
       - "etl"
@@ -59,6 +61,8 @@ services:
       - redis_data_local:/data
     ports:
       - "6379:6379"
+    profiles:
+      - "all"
 
   elastic:
     image: elasticsearch:8.7.0
@@ -112,7 +116,7 @@ services:
 
   s2p:
     build:
-      context: ./projects/movix-admin/
+      context: ./projects/movix-sqlite-etl/
       dockerfile: ./compose/production/sqlite_to_postgres/Dockerfile
     image: yamp_s2p
     stdin_open: true
@@ -265,3 +269,66 @@ services:
     profiles:
       - "all"
       - "ugc-etl"
+
+  notification-rmq:
+    image: rabbitmq:3.6-management-alpine
+    ports:
+      - 15672:15672
+      - 5672:5672
+    profiles:
+      - "all"
+      - "notification"
+
+  notification-api:
+    build:
+      context: ./projects/movix-notification/
+      dockerfile: ./compose/local/api/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.notification/.api
+    profiles:
+      - "all"
+      - "notification"
+
+  notification-scheduler:
+    build:
+      context: ./projects/movix-notification-scheduler/
+      dockerfile: ./compose/local/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.notification/.scheduler
+    volumes:
+      - scheduler_data_local:/etc/cron.d
+    profiles:
+      - "all"
+      - "notification"
+
+  notification-worker:
+    build:
+      context: ./projects/movix-notification/
+      dockerfile: ./compose/local/worker/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.notification/.worker
+      - ./.envs/.local/.notification/.rabbitmq
+      - ./.envs/.local/.notification/.postgres
+    depends_on:
+      - postgres
+      - notification-rmq
+    profiles:
+      - "all"
+      - "notification"
+
+  notification-shortener:
+    build:
+      context: ./projects/movix-notification/
+      dockerfile: ./compose/local/shortener/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.notification/.shortener
+      - ./.envs/.local/.notification/.redis
+    depends_on:
+      - redis
+    profiles:
+      - "all"
+      - "notification"

@@ -4,6 +4,7 @@ volumes:
   clickhouse_data: {}
   postgres_data: {}
   elastic_data: {}
+  scheduler_data: {}
   elk_data: {}
   redis_data: {}
   static_data: {}
@@ -147,3 +148,42 @@ services:
     command: "/start"
     env_file:
       - ./.envs/.production/.ugc
+
+  notification-rmq:
+    image: rabbitmq:3.6-management-alpine
+
+  notification-api:
+    image: ghcr.io/stranded-in-python/movix-notification-api:latest
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.notification/.api
+
+  notification-scheduler:
+    image: ghcr.io/stranded-in-python/movix-notification-scheduler:latest
+    command: "/start"
+    volumes:
+      - scheduler_data:/etc/cron.d
+    env_file:
+      - ./.envs/.production/.notification/.scheduler
+
+  notification-worker:
+    image: ghcr.io/stranded-in-python/movix-notification-worker:latest
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.notification/.worker
+      - ./.envs/.production/.notification/.rabbitmq
+      - ./.envs/.production/.notification/.postgres
+    depends_on:
+      - postgres
+      - notification-rmq
+
+  notification-shortener:
+    build:
+      context: ./projects/movix-notification/
+      dockerfile: ./compose/local/shortener/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.notification/.shortener
+      - ./.envs/.production/.notification/.redis
+    depends_on:
+      - redis
