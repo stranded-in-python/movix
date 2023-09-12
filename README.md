@@ -62,6 +62,12 @@ Django 4.1, Elasticsearch, Redis, Postgres, FastAPI
 
 </details>
 
+</details>
+<summary>Scheme of Movix-notification</summary>
+
+![image](https://github.com/stranded-in-python/movix/assets/5788811/baf91d5f-8ba4-4b63-af91-01dc03405911)
+
+</details>
 ## How to install
 
 You need to make shure, that ElasticSearch is configured properly on your machine to run this project: [StackOverflow Link](https://stackoverflow.com/questions/51445846/elasticsearch-max-virtual-memory-areas-vm-max-map-count-65530-is-too-low-inc)
