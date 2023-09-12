@@ -1,0 +1,49 @@
+#!/bin/bash
+
+python_version="3.11"
+org="stranded-in-python"
+repos="movix-ugc movix-auth movix-s2p movix-etl movix-api movix-notification-api movix-notification-scheduler movix-notification-worker movix-admin"
+default_repos_folder="projects"
+default_venv_folder=".venv"
+default_requirements="requirements/local.txt"
+default_main_branch="main"
+default_remote="origin"
+
+
+if [ ! -d "./${default_repos_folder}" ]; then
+  echo "Not found ${default_repos_folder} dir, creating..."
+  mkdir ${default_repos_folder}
+fi
+
+cd ./${default_repos_folder}
+
+for repo in $repos; do
+
+  if [ ! -d "./${repo}" ]; then
+    echo "Not found ${repo} repo, cloning..."
+    git clone git@github.com:$org/$repo.git
+    cd $repo
+    python${python_version} -m venv $default_venv_folder
+    source $default_venv_folder/bin/activate
+    pip install -r $default_requirements
+    pre-commit install --hook-stage pre-commit --hook-stage pre-push --hook-stage pre-merge-commit
+    deactivate
+    cd ..
+    echo "Installed and configured ${repo}"
+  else
+    echo "Updating ${repo}..."
+    cd ${repo}
+    local_branch=$(git rev-parse --abbrev-ref HEAD)
+    git fetch
+    git stash
+    git checkout $default_main_branch
+    git pull $default_remote $default_main_branch
+    git co $local_branch
+    git stash pop
+    echo "Successfully updated ${repo}/${default_main_branch}. Local changed are in stash"
+    cd ..
+  fi
+
+done
+
+cd ..

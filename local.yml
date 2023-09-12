@@ -281,8 +281,8 @@ services:
 
   notification-api:
     build:
-      context: ./projects/movix-notification/
-      dockerfile: ./compose/local/api/Dockerfile
+      context: ./projects/movix-notification-api/
+      dockerfile: ./compose/local/Dockerfile
     command: "/start"
     env_file:
       - ./.envs/.local/.notification/.api
@@ -305,8 +305,8 @@ services:
 
   notification-worker:
     build:
-      context: ./projects/movix-notification/
-      dockerfile: ./compose/local/worker/Dockerfile
+      context: ./projects/movix-notification-worker/
+      dockerfile: ./compose/local/Dockerfile
     command: "/start"
     env_file:
       - ./.envs/.local/.notification/.worker
@@ -321,8 +321,8 @@ services:
 
   notification-shortener:
     build:
-      context: ./projects/movix-notification/
-      dockerfile: ./compose/local/shortener/Dockerfile
+      context: ./projects/movix-notification-shortener/
+      dockerfile: ./compose/local/Dockerfile
     command: "/start"
     env_file:
       - ./.envs/.local/.notification/.shortener
