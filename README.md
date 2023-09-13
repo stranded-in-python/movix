@@ -9,6 +9,7 @@
 [![CI: Notif-Worker](https://github.com/stranded-in-python/movix-notification-worker/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-notification-worker/actions/workflows/ci.yml)
 [![CI: Notif-API](https://github.com/stranded-in-python/movix-notification-api/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-notification-api/actions/workflows/ci.yml)
 [![CI: Notif-scheduler](https://github.com/stranded-in-python/movix-notification-scheduler/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-notification-scheduler/actions/workflows/ci.yml)
+[![CI: Notif-ETL](https://github.com/stranded-in-python/movix-notification-etl/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-notification-etl/actions/workflows/ci.yml)
 
 ## What is this?
 
