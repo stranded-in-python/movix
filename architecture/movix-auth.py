@@ -24,12 +24,12 @@ with Diagram("movix-auth", show=False, outformat="png"):
         role = Policies("role")
         user = Groups("user")
         managers = [jwt, rights, role, user]
-    
+
     with Cluster("JWT Token Strategy"):
         refresh = KeyManagement("refresh")
         access = KeyManagement("access")
         tokens = [refresh, access]
-    
+
     blacklist = Redis("Blacklist")
 
     db_objects = Storage("Storage Objects")
@@ -41,8 +41,8 @@ with Diagram("movix-auth", show=False, outformat="png"):
     client >> endpoints >> routers
     routers - Edge(style="dashed") - oauth_router >> providers
     routers >> managers
-    
+
     jwt >> tokens >> blacklist
-    
+
     managers >> db_objects >> Edge(label="Except for user") >> cache
     cache >> Edge(label="If no cached response", style="dashed") >> database

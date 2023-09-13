@@ -347,6 +347,7 @@ services:
     image: mailhog/mailhog:v1.0.0
     container_name: geekfactorio_app_local_mailhog
     ports:
+      - "1025:1025"
       - "8025:8025"
     profiles:
       - "all"

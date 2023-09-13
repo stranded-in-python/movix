@@ -37,4 +37,3 @@ ugc-api:
 
 down:
 	docker-compose -f local.yml -f ugc-etl.local.yml -f kafka.yml --profile all down
-
