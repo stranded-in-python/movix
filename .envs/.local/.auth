@@ -18,7 +18,7 @@ SUPER_USER_LOGIN=superuser
 SUPER_USER_EMAIL=superuser@movix.com
 SUPER_USER_PW=qweasd123
 OTEL_RESOURCE_ATTRIBUTES='service.name=movix-auth'
-JAEGER_ENABLED=true
-TRACER_ENABLED=true
+JAEGER_ENABLED=false
+TRACER_ENABLED=false
 JWT_SECRET_KEY="ACCESS"
 rate_limits=false

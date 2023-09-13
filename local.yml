@@ -61,8 +61,6 @@ services:
       - redis_data_local:/data
     ports:
       - "6379:6379"
-    profiles:
-      - "all"
 
   elastic:
     image: elasticsearch:8.7.0
@@ -329,6 +327,15 @@ services:
       - ./.envs/.local/.notification/.redis
     depends_on:
       - redis
+    profiles:
+      - "all"
+      - "notification"
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.0
+    container_name: geekfactorio_app_local_mailhog
+    ports:
+      - "8025:8025"
     profiles:
       - "all"
       - "notification"

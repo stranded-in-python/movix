@@ -2,7 +2,7 @@
 
 python_version="3.11"
 org="stranded-in-python"
-repos="movix-ugc movix-auth movix-s2p movix-etl movix-api movix-notification-api movix-notification-scheduler movix-notification-worker movix-admin"
+repos="movix-ugc movix-auth movix-sqlite-etl movix-etl movix-api movix-notification-api movix-notification-scheduler movix-notification-worker movix-admin"
 default_repos_folder="projects"
 default_venv_folder=".venv"
 default_requirements="requirements/local.txt"
@@ -15,7 +15,7 @@ if [ ! -d "./${default_repos_folder}" ]; then
   mkdir ${default_repos_folder}
 fi
 
-cd ./${default_repos_folder}
+cd $default_repos_folder
 
 for repo in $repos; do
 
