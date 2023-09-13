@@ -8,15 +8,15 @@ with Diagram("movix-admin", show=False, outformat="png"):
     client = Mobile("Client")
     endpoints = Nginx("API gateway")
     dj_admin = Django("Admin")
-    
+
     with Cluster("movie API"):
         detail = Django("DetailView")
         lst = Django("ListView")
         apis = [detail, lst]
-    
+
     db = Postgresql("movies_db")
 
-    client >> endpoints 
+    client >> endpoints
     endpoints >> dj_admin
     endpoints >> apis
     dj_admin >> Edge(label="Add/Delete movies, persons, genres") >> db
