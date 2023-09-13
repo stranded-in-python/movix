@@ -331,6 +331,18 @@ services:
       - "all"
       - "notification"
 
+  notification-etl:
+    build:
+      context: ./projects/movix-notification-etl/
+      dockerfile: ./compose/local/Dockerfile
+    command: "/start"
+    env_file:
+      - ./.envs/.local/.notification/.etl
+      - ./.envs/.local/.postgres
+    profiles:
+      - "all"
+      - "notification"
+
   mailhog:
     image: mailhog/mailhog:v1.0.0
     container_name: geekfactorio_app_local_mailhog

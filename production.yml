@@ -178,12 +178,17 @@ services:
       - notification-rmq
 
   notification-shortener:
-    build:
-      context: ./projects/movix-notification/
-      dockerfile: ./compose/local/shortener/Dockerfile
+    image: ghcr.io/stranded-in-python/movix-notification-shortener:latest
     command: "/start"
     env_file:
       - ./.envs/.production/.notification/.shortener
       - ./.envs/.production/.notification/.redis
     depends_on:
       - redis
+
+  notification-etl:
+    image: ghcr.io/stranded-in-python/movix-notification-etl:latest
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.notification/.etl
+      - ./.envs/.production/.postgres

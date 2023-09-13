@@ -2,7 +2,7 @@
 
 python_version="3.11"
 org="stranded-in-python"
-repos="movix-ugc movix-auth movix-sqlite-etl movix-etl movix-api movix-notification-api movix-notification-scheduler movix-notification-worker movix-admin"
+repos="movix-ugc movix-auth movix-sqlite-etl movix-etl movix-api movix-notification-api movix-notification-scheduler movix-notification-worker movix-admin movix-notification-etl"
 default_repos_folder="projects"
 default_venv_folder=".venv"
 default_requirements="requirements/local.txt"
