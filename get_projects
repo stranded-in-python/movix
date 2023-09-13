@@ -9,6 +9,10 @@ default_requirements="requirements/local.txt"
 default_main_branch="main"
 default_remote="origin"
 
+if [ ! $(which pre-commit) ]; then
+  npm install pre-commit --global
+  pre-commit install
+fi
 
 if [ ! -d "./${default_repos_folder}" ]; then
   echo "Not found ${default_repos_folder} dir, creating..."
@@ -27,7 +31,7 @@ for repo in $repos; do
     source $default_venv_folder/bin/activate
     pip install -r $default_requirements
     # check if pre-commit is installed
-    if [ $(which pre-commit) ]; then 
+    if [ $(which pre-commit) ]; then
       pre-commit install --hook-type pre-commit --hook-type pre-push --hook-type pre-merge-commit
     fi
     deactivate
