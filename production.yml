@@ -192,3 +192,10 @@ services:
     env_file:
       - ./.envs/.production/.notification/.etl
       - ./.envs/.production/.postgres
+
+  billing-api:
+    image: ghcr.io/stranded-in-python/movix-billing-api:latest
+    command: "/start"
+    env_file:
+      - ./.envs/.production/.billing/.api
+      - ./.envs/.production/.postgres

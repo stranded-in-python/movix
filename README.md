@@ -11,6 +11,8 @@
 [![CI: Notif-scheduler](https://github.com/stranded-in-python/movix-notification-scheduler/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-notification-scheduler/actions/workflows/ci.yml)
 [![CI: Notif-ETL](https://github.com/stranded-in-python/movix-notification-etl/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-notification-etl/actions/workflows/ci.yml)
 
+[![CI: Billing-API](https://github.com/stranded-in-python/movix-billing-api/actions/workflows/ci.yml/badge.svg)](https://github.com/stranded-in-python/movix-billing-api/actions/workflows/ci.yml)
+
 ## What is this?
 
 This is a project of 11th group of 25th stream (previously 7th of 24th) of Yandex Practicum for Middle Python Developers. The goal of the project is to build a online streaming platform.
@@ -66,6 +68,13 @@ Django 4.1, Elasticsearch, Redis, Postgres, FastAPI
 <summary>Scheme of Movix-notification</summary>
 
 ![image](https://github.com/stranded-in-python/movix/assets/5788811/baf91d5f-8ba4-4b63-af91-01dc03405911)
+
+</details>
+
+<details>
+<summary>Architecture of Billing and Subscriptions API</summary>
+
+[Specification](./specification/billing.md)
 
 </details>
 ## How to install
