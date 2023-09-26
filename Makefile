@@ -1,5 +1,5 @@
 init:
-	get_projects && docker compose -f local.yml --profile init up -d
+	./get_projects && docker compose -f local.yml --profile init up -d
 
 
 all:
