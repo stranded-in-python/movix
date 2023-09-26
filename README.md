@@ -74,7 +74,7 @@ Django 4.1, Elasticsearch, Redis, Postgres, FastAPI
 <details>
 <summary>Architecture of Billing and Subscriptions API</summary>
 
-[Specification](https://gist.github.com/SBKubric/0a514841f52be981afa40c1637efab33)
+[Specification](./specification/billing.md)
 
 </details>
 ## How to install
