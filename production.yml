@@ -197,5 +197,9 @@ services:
     image: ghcr.io/stranded-in-python/movix-billing-api:latest
     command: "/start"
     env_file:
-      - ./.envs/.production/.billing/.api
+      - ./.envs/.production/.billing/
       - ./.envs/.production/.postgres
+
+  subscriptions-api:
+    image: ghcr.io/stranded-in-python/movix-subscription-api:latest
+    command: "/start"

@@ -95,7 +95,7 @@ services:
     profiles:
       - "all"
       - "logging"
-  
+
   logstash:
     image: elastic/logstash:8.7.0
     env_file:
@@ -369,7 +369,7 @@ services:
       - 8007:8000
       - 5678:5672
     env_file:
-      - ./.envs/.local/.billing/.api
+      - ./.envs/.local/.billing
       - ./.envs/.local/.postgres
     depends_on:
       - postgres
@@ -377,18 +377,15 @@ services:
       - "all"
       - "billing"
 
-  ## Not ready
-  # subscriptions-api:
-  #   build:
-  #     context: ./projects/movix-billing-api:/
-  #     dockerfile: ./compose/local/Dockerfile
-  #   command: "/start"
-  #   ports:
-  #     - 8008:8000
-  #   env_file:
-  #     - ./.envs/.local/.subscriptions/.api
-  #   depends_on:
-  #     - postgres
-  #   profiles:
-  #     - "all"
-  #     - "billing"
+  subscriptions-api:
+    build:
+      context: ./projects/movix-subscription-api/
+      dockerfile: ./compose/local/Dockerfile
+    command: "/start"
+    ports:
+      - 8008:8000
+    depends_on:
+      - postgres
+    profiles:
+      - "all"
+      - "billing"
