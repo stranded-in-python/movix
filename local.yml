@@ -95,7 +95,7 @@ services:
     profiles:
       - "all"
       - "logging"
-  
+
   logstash:
     image: elastic/logstash:8.7.0
     env_file:
